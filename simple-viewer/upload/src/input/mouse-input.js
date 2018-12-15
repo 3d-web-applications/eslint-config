@@ -14,7 +14,6 @@ MouseInput.attributes.add('distanceSensitivity', {
   description: 'How fast the camera moves in and out. Higher is faster',
 });
 
-// initialize code called once per entity
 MouseInput.prototype.initialize = function () {
   this.orbitCamera = this.entity.script.orbitCamera;
 
@@ -104,7 +103,6 @@ MouseInput.prototype.onMouseUp = function (event) {
 };
 
 MouseInput.prototype.onMouseMove = function (event) {
-  // var mouse = pc.app.mouse;
   if (this.lookButtonDown) {
     this.orbitCamera.pitch -= event.dy * this.orbitSensitivity;
     this.orbitCamera.yaw -= event.dx * this.orbitSensitivity;

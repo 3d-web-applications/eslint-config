@@ -1,10 +1,8 @@
 const KeyboardInput = pc.createScript('keyboardInput');
 
-// initialize code called once per entity
 KeyboardInput.prototype.initialize = function () {
   this.orbitCamera = this.entity.script.orbitCamera;
 };
-
 
 KeyboardInput.prototype.postInitialize = function () {
   if (this.orbitCamera) {
@@ -15,7 +13,6 @@ KeyboardInput.prototype.postInitialize = function () {
   }
 };
 
-// update code called every frame
 KeyboardInput.prototype.update = function (/* dt */) {
   if (this.orbitCamera) {
     if (this.app.keyboard.wasPressed(pc.KEY_SPACE)) {

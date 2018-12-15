@@ -41,21 +41,6 @@ module.exports = {
     },
   },
   module: {
-    rules: [/* {
-      test: /\.js$/,
-      exclude: /node_modules/,
-      use: {
-        loader: 'babel-loader',
-        options: {
-          // presets: [['es2015', { modules: false }]],
-          presets: ['babel-preset-env'],
-        },
-      },
-    },
-    {
-      test: /\.js$/,
-      exclude: /node_modules/,
-      use: ['babel-loader', 'eslint-loader'],
-    } */],
+    rules: [],
   },
 };

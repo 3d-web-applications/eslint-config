@@ -14,7 +14,6 @@ TouchInput.attributes.add('distanceSensitivity', {
   description: 'How fast the camera moves in and out. Higher is faster',
 });
 
-// initialize code called once per entity
 TouchInput.prototype.initialize = function () {
   this.orbitCamera = this.entity.script.orbitCamera;
 

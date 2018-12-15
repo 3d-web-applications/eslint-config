@@ -29,28 +29,6 @@ module.exports = {
     minimize: true,
   },
   module: {
-    rules: [/* {
-      test: /\.js$/,
-      exclude: /node_modules/,
-      use: {
-        loader: 'babel-loader',
-        options: {
-          presets: ['@babel/env'],
-          plugins: ['@babel/plugin-syntax-dynamic-import'],
-        },
-      },
-    },
-    {
-      test: /\.js$/,
-      exclude: /node_modules/,
-      use: ['babel-loader', 'eslint-loader', {
-        loader: 'babel-loader',
-        options: {
-          presets: ['@babel/env'],
-          plugins: ['@babel/plugin-syntax-dynamic-import'],
-        },
-      },
-      ],
-    } */],
+    rules: [],
   },
 };
