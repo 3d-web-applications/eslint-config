@@ -14,7 +14,7 @@ TouchInput.attributes.add('distanceSensitivity', {
   description: 'How fast the camera moves in and out. Higher is faster',
 });
 
-TouchInput.prototype.initialize = function () {
+TouchInput.prototype.initialize = () => {
   this.orbitCamera = this.entity.script.orbitCamera;
 
   // Store the position of the touch so we can calculate the distance moved
@@ -31,7 +31,7 @@ TouchInput.prototype.initialize = function () {
 
     this.app.touch.on(pc.EVENT_TOUCHMOVE, this.onTouchMove, this);
 
-    this.on('destroy', function () {
+    this.on('destroy', () => {
       this.app.touch.off(pc.EVENT_TOUCHSTART, this.onTouchStartEndCancel, this);
       this.app.touch.off(pc.EVENT_TOUCHEND, this.onTouchStartEndCancel, this);
       this.app.touch.off(pc.EVENT_TOUCHCANCEL,
@@ -42,7 +42,7 @@ TouchInput.prototype.initialize = function () {
   }
 };
 
-TouchInput.prototype.getPinchDistance = function (pointA, pointB) {
+TouchInput.prototype.getPinchDistance = (pointA, pointB) => {
   // Return the distance between the two points
   const dx = pointA.x - pointB.x;
   const dy = pointA.y - pointB.y;
@@ -50,7 +50,7 @@ TouchInput.prototype.getPinchDistance = function (pointA, pointB) {
   return Math.sqrt((dx * dx) + (dy * dy));
 };
 
-TouchInput.prototype.calcMidPoint = function (pointA, pointB, result) {
+TouchInput.prototype.calcMidPoint = (pointA, pointB, result) => {
   const newResult = result;
   result.set(pointB.x - pointA.x, pointB.y - pointA.y);
   result.scale(0.5);
@@ -59,7 +59,7 @@ TouchInput.prototype.calcMidPoint = function (pointA, pointB, result) {
   return newResult;
 };
 
-TouchInput.prototype.onTouchStartEndCancel = function (event) {
+TouchInput.prototype.onTouchStartEndCancel = (event) => {
   // We only care about the first touch for camera rotation. As the user touches the screen,
   // we stored the current touch position
   const { touches } = event;
@@ -78,7 +78,7 @@ TouchInput.fromWorldPoint = new pc.Vec3();
 TouchInput.toWorldPoint = new pc.Vec3();
 TouchInput.worldDiff = new pc.Vec3();
 
-TouchInput.prototype.pan = function (midPoint) {
+TouchInput.prototype.pan = (midPoint) => {
   const { fromWorldPoint, toWorldPoint, worldDiff } = TouchInput;
 
   // For panning to work at any zoom level, we use screen point to world projection
@@ -98,7 +98,7 @@ TouchInput.prototype.pan = function (midPoint) {
 
 TouchInput.pinchMidPoint = new pc.Vec2();
 
-TouchInput.prototype.onTouchMove = function (event) {
+TouchInput.prototype.onTouchMove = (event) => {
   let { pinchMidPoint } = TouchInput;
 
   // We only care about the first touch for camera rotation. Work out the difference moved since the last event

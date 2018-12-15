@@ -14,13 +14,13 @@ MouseInput.attributes.add('distanceSensitivity', {
   description: 'How fast the camera moves in and out. Higher is faster',
 });
 
-MouseInput.prototype.initialize = function () {
+MouseInput.prototype.initialize = () => {
   this.orbitCamera = this.entity.script.orbitCamera;
 
   if (this.orbitCamera) {
     const self = this;
 
-    const onMouseOut = function (e) {
+    const onMouseOut = (e) => {
       self.onMouseOut(e);
     };
 
@@ -33,7 +33,7 @@ MouseInput.prototype.initialize = function () {
     window.addEventListener('mouseout', onMouseOut, false);
 
     // Remove the listeners so if this entity is destroyed
-    this.on('destroy', function () {
+    this.on('destroy', () => {
       this.app.mouse.off(pc.EVENT_MOUSEDOWN, this.onMouseDown, this);
       this.app.mouse.off(pc.EVENT_MOUSEUP, this.onMouseUp, this);
       this.app.mouse.off(pc.EVENT_MOUSEMOVE, this.onMouseMove, this);
@@ -56,7 +56,7 @@ MouseInput.fromWorldPoint = new pc.Vec3();
 MouseInput.toWorldPoint = new pc.Vec3();
 MouseInput.worldDiff = new pc.Vec3();
 
-MouseInput.prototype.pan = function (screenPoint) {
+MouseInput.prototype.pan = (screenPoint) => {
   const { fromWorldPoint, toWorldPoint, worldDiff } = MouseInput;
 
   // For panning to work at any zoom level, we use screen point to world projection
@@ -74,7 +74,7 @@ MouseInput.prototype.pan = function (screenPoint) {
   this.orbitCamera.pivotPoint.add(worldDiff);
 };
 
-MouseInput.prototype.onMouseDown = function (event) {
+MouseInput.prototype.onMouseDown = (event) => {
   switch (event.button) {
     case pc.MOUSEBUTTON_LEFT:
       this.lookButtonDown = true;
@@ -88,7 +88,7 @@ MouseInput.prototype.onMouseDown = function (event) {
   }
 };
 
-MouseInput.prototype.onMouseUp = function (event) {
+MouseInput.prototype.onMouseUp = (event) => {
   switch (event.button) {
     case pc.MOUSEBUTTON_LEFT:
       this.lookButtonDown = false;
@@ -102,7 +102,7 @@ MouseInput.prototype.onMouseUp = function (event) {
   }
 };
 
-MouseInput.prototype.onMouseMove = function (event) {
+MouseInput.prototype.onMouseMove = (event) => {
   if (this.lookButtonDown) {
     this.orbitCamera.pitch -= event.dy * this.orbitSensitivity;
     this.orbitCamera.yaw -= event.dx * this.orbitSensitivity;
@@ -114,14 +114,14 @@ MouseInput.prototype.onMouseMove = function (event) {
 };
 
 
-MouseInput.prototype.onMouseWheel = function (event) {
+MouseInput.prototype.onMouseWheel = (event) => {
   this.orbitCamera.distance -= event.wheel
     * this.distanceSensitivity * (this.orbitCamera.distance * 0.1);
   event.event.preventDefault();
 };
 
 
-MouseInput.prototype.onMouseOut = function (/* event */) {
+MouseInput.prototype.onMouseOut = (/* event */) => {
   this.lookButtonDown = false;
   this.panButtonDown = false;
 };
