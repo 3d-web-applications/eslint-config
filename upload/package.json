@@ -1,0 +1,33 @@
+{
+  "name": "playcanvas-template",
+  "version": "1.0.0",
+  "description": "Template to bundle files and upload them to PlayCanvas projects",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cross-env NODE_ENV=development webpack --mode development --config webpack.config.js",
+    "build": "cross-env NODE_ENV=production webpack --mode production --config webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/3d-web-applications/simple-viewer.git"
+  },
+  "keywords": [
+    "PlayCanvas"
+  ],
+  "author": "Lars Wobus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/3d-web-applications/simple-viewer/issues"
+  },
+  "homepage": "https://github.com/3d-web-applications/simple-viewer#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "babel-loader": "^8.0.4",
+    "cross-env": "^5.2.0",
+    "playcanvas-webpack-plugin": "^1.0.8",
+    "webpack": "^4.27.1",
+    "webpack-cli": "^3.1.2"
+  }
+}
