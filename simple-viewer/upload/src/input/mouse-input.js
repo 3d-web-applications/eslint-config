@@ -14,114 +14,117 @@ MouseInput.attributes.add('distanceSensitivity', {
   description: 'How fast the camera moves in and out. Higher is faster',
 });
 
-MouseInput.prototype.initialize = () => {
-  this.orbitCamera = this.entity.script.orbitCamera;
-
-  if (this.orbitCamera) {
-    const self = this;
-
-    const onMouseOut = (e) => {
-      self.onMouseOut(e);
-    };
-
-    this.app.mouse.on(pc.EVENT_MOUSEDOWN, this.onMouseDown, this);
-    this.app.mouse.on(pc.EVENT_MOUSEUP, this.onMouseUp, this);
-    this.app.mouse.on(pc.EVENT_MOUSEMOVE, this.onMouseMove, this);
-    this.app.mouse.on(pc.EVENT_MOUSEWHEEL, this.onMouseWheel, this);
-
-    // Listen to when the mouse travels out of the window
-    window.addEventListener('mouseout', onMouseOut, false);
-
-    // Remove the listeners so if this entity is destroyed
-    this.on('destroy', () => {
-      this.app.mouse.off(pc.EVENT_MOUSEDOWN, this.onMouseDown, this);
-      this.app.mouse.off(pc.EVENT_MOUSEUP, this.onMouseUp, this);
-      this.app.mouse.off(pc.EVENT_MOUSEMOVE, this.onMouseMove, this);
-      this.app.mouse.off(pc.EVENT_MOUSEWHEEL, this.onMouseWheel, this);
-
-      window.removeEventListener('mouseout', onMouseOut, false);
-    });
-  }
-
-  // Disabling the context menu stops the browser displaying a menu when
-  // you right-click the page
-  this.app.mouse.disableContextMenu();
-
-  this.lookButtonDown = false;
-  this.panButtonDown = false;
-  this.lastPoint = new pc.Vec2();
-};
-
 MouseInput.fromWorldPoint = new pc.Vec3();
 MouseInput.toWorldPoint = new pc.Vec3();
 MouseInput.worldDiff = new pc.Vec3();
 
-MouseInput.prototype.pan = (screenPoint) => {
-  const { fromWorldPoint, toWorldPoint, worldDiff } = MouseInput;
+MouseInput.prototype = {
+  initialize: () => {
+    this.orbitCamera = this.entity.script.orbitCamera;
 
-  // For panning to work at any zoom level, we use screen point to world projection
-  // to work out how far we need to pan the pivotEntity in world space
-  const { camera } = this.entity;
-  const { distance } = this.orbitCamera;
+    if (this.orbitCamera) {
+      const self = this;
 
-  camera.screenToWorld(screenPoint.x, screenPoint.y, distance, fromWorldPoint);
-  camera.screenToWorld(
-    this.lastPoint.x, this.lastPoint.y, distance, toWorldPoint,
-  );
+      const onMouseOut = (e) => {
+        self.onMouseOut(e);
+      };
 
-  worldDiff.sub2(toWorldPoint, fromWorldPoint);
+      this.app.mouse.on(pc.EVENT_MOUSEDOWN, this.onMouseDown, this);
+      this.app.mouse.on(pc.EVENT_MOUSEUP, this.onMouseUp, this);
+      this.app.mouse.on(pc.EVENT_MOUSEMOVE, this.onMouseMove, this);
+      this.app.mouse.on(pc.EVENT_MOUSEWHEEL, this.onMouseWheel, this);
 
-  this.orbitCamera.pivotPoint.add(worldDiff);
-};
+      // Listen to when the mouse travels out of the window
+      window.addEventListener('mouseout', onMouseOut, false);
 
-MouseInput.prototype.onMouseDown = (event) => {
-  switch (event.button) {
-    case pc.MOUSEBUTTON_LEFT:
-      this.lookButtonDown = true;
-      break;
-    case pc.MOUSEBUTTON_MIDDLE:
-    case pc.MOUSEBUTTON_RIGHT:
-      this.panButtonDown = true;
-      break;
-    default:
-      break;
-  }
-};
+      // Remove the listeners so if this entity is destroyed
+      this.on('destroy', () => {
+        this.app.mouse.off(pc.EVENT_MOUSEDOWN, this.onMouseDown, this);
+        this.app.mouse.off(pc.EVENT_MOUSEUP, this.onMouseUp, this);
+        this.app.mouse.off(pc.EVENT_MOUSEMOVE, this.onMouseMove, this);
+        this.app.mouse.off(pc.EVENT_MOUSEWHEEL, this.onMouseWheel, this);
 
-MouseInput.prototype.onMouseUp = (event) => {
-  switch (event.button) {
-    case pc.MOUSEBUTTON_LEFT:
-      this.lookButtonDown = false;
-      break;
-    case pc.MOUSEBUTTON_MIDDLE:
-    case pc.MOUSEBUTTON_RIGHT:
-      this.panButtonDown = false;
-      break;
-    default:
-      break;
-  }
-};
+        window.removeEventListener('mouseout', onMouseOut, false);
+      });
+    }
 
-MouseInput.prototype.onMouseMove = (event) => {
-  if (this.lookButtonDown) {
-    this.orbitCamera.pitch -= event.dy * this.orbitSensitivity;
-    this.orbitCamera.yaw -= event.dx * this.orbitSensitivity;
-  } else if (this.panButtonDown) {
-    this.pan(event);
-  }
+    // Disabling the context menu stops the browser displaying a menu when
+    // you right-click the page
+    this.app.mouse.disableContextMenu();
 
-  this.lastPoint.set(event.x, event.y);
-};
+    this.lookButtonDown = false;
+    this.panButtonDown = false;
+    this.lastPoint = new pc.Vec2();
+  },
 
+  pan: (screenPoint) => {
+    const { fromWorldPoint, toWorldPoint, worldDiff } = MouseInput;
 
-MouseInput.prototype.onMouseWheel = (event) => {
-  this.orbitCamera.distance -= event.wheel
-    * this.distanceSensitivity * (this.orbitCamera.distance * 0.1);
-  event.event.preventDefault();
-};
+    // For panning to work at any zoom level, we use screen point to world projection
+    // to work out how far we need to pan the pivotEntity in world space
+    const { camera } = this.entity;
+    const { distance } = this.orbitCamera;
 
+    camera.screenToWorld(
+      screenPoint.x, screenPoint.y, distance, fromWorldPoint,
+    );
 
-MouseInput.prototype.onMouseOut = (/* event */) => {
-  this.lookButtonDown = false;
-  this.panButtonDown = false;
+    camera.screenToWorld(
+      this.lastPoint.x, this.lastPoint.y, distance, toWorldPoint,
+    );
+
+    worldDiff.sub2(toWorldPoint, fromWorldPoint);
+
+    this.orbitCamera.pivotPoint.add(worldDiff);
+  },
+
+  onMouseDown: (event) => {
+    switch (event.button) {
+      case pc.MOUSEBUTTON_LEFT:
+        this.lookButtonDown = true;
+        break;
+      case pc.MOUSEBUTTON_MIDDLE:
+      case pc.MOUSEBUTTON_RIGHT:
+        this.panButtonDown = true;
+        break;
+      default:
+        break;
+    }
+  },
+
+  onMouseUp: (event) => {
+    switch (event.button) {
+      case pc.MOUSEBUTTON_LEFT:
+        this.lookButtonDown = false;
+        break;
+      case pc.MOUSEBUTTON_MIDDLE:
+      case pc.MOUSEBUTTON_RIGHT:
+        this.panButtonDown = false;
+        break;
+      default:
+        break;
+    }
+  },
+
+  onMouseMove: (event) => {
+    if (this.lookButtonDown) {
+      this.orbitCamera.pitch -= event.dy * this.orbitSensitivity;
+      this.orbitCamera.yaw -= event.dx * this.orbitSensitivity;
+    } else if (this.panButtonDown) {
+      this.pan(event);
+    }
+
+    this.lastPoint.set(event.x, event.y);
+  },
+
+  onMouseWheel: (event) => {
+    this.orbitCamera.distance -= event.wheel
+      * this.distanceSensitivity * (this.orbitCamera.distance * 0.1);
+    event.event.preventDefault();
+  },
+
+  onMouseOut: (/* event */) => {
+    this.lookButtonDown = false;
+    this.panButtonDown = false;
+  },
 };
