@@ -13,7 +13,9 @@ module.exports = {
   },
   plugins: [
     new PlayCanvasWebpackPlugin({
-      skipUpload: process.env.UPLOAD === 'no' || !configuration.bearer || configuration.bearer.length !== 32,
+      skipUpload: process.env.UPLOAD === 'no'
+       || !configuration.bearer
+       || configuration.bearer.length !== 32,
       bearer: configuration.bearer,
       project: configuration.projectId,
       files: configuration.files || {

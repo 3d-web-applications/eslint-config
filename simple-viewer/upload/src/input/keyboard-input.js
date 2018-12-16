@@ -16,7 +16,9 @@ KeyboardInput.prototype.postInitialize = function () {
 KeyboardInput.prototype.update = function (/* dt */) {
   if (this.orbitCamera) {
     if (this.app.keyboard.wasPressed(pc.KEY_SPACE)) {
-      this.orbitCamera.reset(this.startYaw, this.startPitch, this.startDistance);
+      this.orbitCamera.reset(
+        this.startYaw, this.startPitch, this.startDistance,
+      );
       this.orbitCamera.pivotPoint = this.startPivotPosition;
     }
   }
